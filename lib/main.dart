@@ -1,4 +1,5 @@
 import 'package:binzout/widgets/app_information_section.dart';
+import 'package:binzout/widgets/postcode_search_form.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,13 +32,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool isEndDrawerOpen = false;
-  bool isHoveringOverDartLink = false;
-
-  void _closeEndDraw() {
-    if (isEndDrawerOpen) {
-      _scaffoldKey.currentState!.closeEndDrawer();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: .center,
-          children: [const Text('This is temporary')],
+          children: [PostcodeSearchForm()],
         ),
       ),
     );
