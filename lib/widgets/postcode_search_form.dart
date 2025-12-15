@@ -1,3 +1,4 @@
+import 'package:binzout/animations/slide_up.dart';
 import 'package:binzout/widgets/bin_schedule_page.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class PostcodeSearchForm extends StatefulWidget {
 
 class _PostcodeSearchForm extends State<PostcodeSearchForm> {
   final _inputFormStateKey = GlobalKey<FormState>();
-  var providedPostcode = "";
+  bool hasEnteredText = false;
 
   final TextEditingController _postcodeInputController =
       TextEditingController();
@@ -46,6 +47,21 @@ class _PostcodeSearchForm extends State<PostcodeSearchForm> {
             SizedBox(height: 20),
             TextFormField(
               controller: _postcodeInputController,
+              onChanged: (value) {
+                if (value.isEmpty) {
+                  if (hasEnteredText == true) {
+                    setState(() {
+                      hasEnteredText = false;
+                    });
+                  }
+                } else {
+                  if (hasEnteredText == false) {
+                    setState(() {
+                      hasEnteredText = true;
+                    });
+                  }
+                }
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Postcode required.';
@@ -54,6 +70,15 @@ class _PostcodeSearchForm extends State<PostcodeSearchForm> {
               },
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
+                suffixIcon: hasEnteredText
+                    ? IconButton(
+                        onPressed: () {
+                          _postcodeInputController.clear();
+                        },
+                        tooltip: "Clear",
+                        icon: Icon(Icons.dangerous_outlined),
+                      )
+                    : null,
                 border: OutlineInputBorder(),
                 labelText: 'Postcode',
               ),
@@ -62,15 +87,14 @@ class _PostcodeSearchForm extends State<PostcodeSearchForm> {
 
             ElevatedButton(
               onPressed: () {
-                if (_inputFormStateKey.currentState!.validate()) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => BinSchedulePage(
-                        postcode: _postcodeInputController.text,
-                      ),
-                    ),
-                  );
-                }
+                final isValid = _inputFormStateKey.currentState!.validate();
+                if (!isValid) return;
+
+                Navigator.of(
+                  context,
+                ).push(slideUpAnimation(BinSchedulePage(postcode: "L167PQ")));
+
+                _postcodeInputController.clear();
               },
 
               style: ButtonStyle(
