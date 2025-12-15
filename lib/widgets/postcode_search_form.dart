@@ -8,7 +8,7 @@ class PostcodeSearchForm extends StatefulWidget {
 }
 
 class _PostcodeSearchForm extends State<PostcodeSearchForm> {
-  final GlobalKey<FormState> _inputFormStateKey = GlobalKey<FormState>();
+  final _inputFormStateKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,13 @@ class _PostcodeSearchForm extends State<PostcodeSearchForm> {
         key: _inputFormStateKey,
         child: Column(
           children: [
-            TextField(
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Postcode required.';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Postcode',
@@ -26,12 +32,19 @@ class _PostcodeSearchForm extends State<PostcodeSearchForm> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _inputFormStateKey.currentState!.validate();
+              },
+
               style: ButtonStyle(
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.circular(3),
+                  ),
+                ),
                 backgroundColor: WidgetStateProperty<Color>.fromMap(
                   <WidgetStatesConstraint, Color>{
                     WidgetState.hovered: const Color.fromARGB(255, 62, 36, 107),
-
                     WidgetState.any: Theme.of(context).primaryColor,
                   },
                 ),

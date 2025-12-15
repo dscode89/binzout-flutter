@@ -128,7 +128,10 @@ class _AppInformationState extends State<AppInformationSection> {
                     ),
                     text: "green ",
                   ),
-                  TextSpan(text: "bins will be generated for you."),
+                  TextSpan(
+                    text:
+                        "bins will be generated for you. Currently this is only for residents of Liverpool, UK.",
+                  ),
                 ],
               ),
             ),
@@ -153,7 +156,31 @@ class _AppInformationState extends State<AppInformationSection> {
             Center(
               child: ElevatedButton(
                 onPressed: _closeEndDraw,
-                child: Text('Close'),
+
+                style: ButtonStyle(
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.circular(3),
+                    ),
+                  ),
+                  backgroundColor: WidgetStateProperty<Color>.fromMap(<
+                    WidgetStatesConstraint,
+                    Color
+                  >{
+                    WidgetState.hovered: const Color.fromARGB(255, 62, 36, 107),
+                    WidgetState.any: Theme.of(context).primaryColor,
+                  }),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
