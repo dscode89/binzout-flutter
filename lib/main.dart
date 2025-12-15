@@ -14,7 +14,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Binzout Flutter App',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.black12,
+        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+      ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
