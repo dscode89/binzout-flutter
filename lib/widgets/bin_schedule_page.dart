@@ -45,6 +45,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
   @override
   Widget build(BuildContext context) {
     double currentScreenWidth = MediaQuery.of(context).size.width.toDouble();
+    print(currentScreenWidth);
 
     if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -73,13 +74,61 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       for (var item in testData!)
-                        ScheduleCard(scheduleEvent: item),
+                        ScheduleCard(
+                          scheduleEvent: item,
+                          orientation: 'vertical',
+                        ),
                     ],
                   ),
                 ),
               ),
             )
-          : Center(child: Column()),
+          : currentScreenWidth < 702
+          ? Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,
+                ),
+
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: BoxBorder.all(color: Colors.white),
+                  ),
+                  child: ListView(
+                    children: [
+                      for (var item in testData!)
+                        ScheduleCard(
+                          scheduleEvent: item,
+                          orientation: 'vertical',
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,
+                ),
+
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: BoxBorder.all(color: Colors.white),
+                  ),
+                  child: ListView(
+                    children: [
+                      Text('gay'),
+                      for (var item in testData!)
+                        ScheduleCard(
+                          scheduleEvent: item,
+                          orientation: 'horizontal',
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Add to calendar",
         onPressed: () {},
