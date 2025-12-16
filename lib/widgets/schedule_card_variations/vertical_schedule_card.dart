@@ -19,59 +19,31 @@ class VerticalScheduleCard extends StatelessWidget {
       padding: const EdgeInsets.all(15.0),
       child: Container(
         width: 300,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          color: const Color.fromARGB(255, 243, 242, 243),
-        ),
+        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: [
             Icon(
               Icons.restore_from_trash,
               color: widget!.binColorReference[widget.scheduleEvent.type],
-              size: 150,
+              size: 200,
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(4),
-                  bottomRight: Radius.circular(4),
-                ),
-              ),
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10),
-                  SizedBox(height: 10),
-                  Text(
-                    formattedDate,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    daysTillDueDate == 0
-                        ? 'Put your bin out tonight!'
-                        : '$daysTillDueDate days till bin collection.',
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 245, 212, 223),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-
-                  SizedBox(height: 10),
-                ],
-              ),
+            Text(
+              'Next Collection Date:',
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
+            Text(
+              formattedDate,
+              style: TextStyle(fontSize: 19, color: Colors.pink),
+            ),
+            SizedBox(height: 40),
+            Text(
+              daysTillDueDate == 0
+                  ? 'Put your bin out tonight!'
+                  : '$daysTillDueDate days till bin collection.',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            SizedBox(height: 20),
           ],
         ),
       ),

@@ -36,7 +36,7 @@ class HorizontalScheduleCard extends StatelessWidget {
                 ),
                 Text(
                   formattedDate,
-                  style: TextStyle(fontSize: 15, color: Colors.pink),
+                  style: TextStyle(fontSize: 19, color: Colors.pink),
                 ),
                 SizedBox(height: 40),
                 Text(
