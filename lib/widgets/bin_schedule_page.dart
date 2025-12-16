@@ -1,7 +1,7 @@
 import 'package:binzout/classes/bin_schedule_event.dart';
 import 'package:binzout/utilities/type_assert_json_list.dart';
 
-import 'package:binzout/widgets/vertical_schedule_card.dart';
+import 'package:binzout/widgets/schedule_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -37,7 +37,6 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        print(testData);
         isLoading = false;
       });
     });
@@ -55,7 +54,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          'BinZout.',
+          'Upcoming collection dates:',
           style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
         ),
         centerTitle: false,
@@ -74,7 +73,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       for (var item in testData!)
-                        VerticalScheduleCard(scheduleEvent: item),
+                        ScheduleCard(scheduleEvent: item),
                     ],
                   ),
                 ),
