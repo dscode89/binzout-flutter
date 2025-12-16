@@ -85,23 +85,30 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
             )
           : currentScreenWidth < 702
           ? Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.7,
-                ),
-
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: BoxBorder.all(color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.8,
                   ),
-                  child: ListView(
-                    children: [
-                      for (var item in testData!)
-                        ScheduleCard(
-                          scheduleEvent: item,
-                          orientation: 'vertical',
-                        ),
-                    ],
+
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: BoxBorder.all(
+                        color: Theme.of(context).primaryColor,
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: ListView(
+                      children: [
+                        for (var item in testData!)
+                          ScheduleCard(
+                            scheduleEvent: item,
+                            orientation: 'vertical',
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
