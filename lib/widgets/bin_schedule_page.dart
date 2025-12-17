@@ -1,13 +1,16 @@
+import 'dart:convert';
+import 'dart:js_interop';
+import 'dart:typed_data';
 import 'package:binzout/classes/bin_schedule_event.dart';
 import 'package:binzout/utilities/type_assert_json_list.dart';
-
 import 'package:binzout/widgets/schedule_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
+import 'package:web/web.dart' as web;
 
 class BinSchedulePage extends StatefulWidget {
   final String postcode;
-
   const BinSchedulePage({super.key, required this.postcode});
 
   @override
@@ -16,6 +19,8 @@ class BinSchedulePage extends StatefulWidget {
 
 class _BinSchedulePageState extends State<BinSchedulePage> {
   late final List<BinScheduleEvent>? testData;
+  String initialJson = "";
+
   bool isLoading = true;
 
   @override
@@ -32,6 +37,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
     );
 
     setState(() {
+      initialJson = testJson;
       testData = convertedBinScheduleData;
     });
 
@@ -45,7 +51,6 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
   @override
   Widget build(BuildContext context) {
     double currentScreenWidth = MediaQuery.of(context).size.width.toDouble();
-    print(currentScreenWidth);
 
     if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -125,7 +130,6 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
                   ),
                   child: ListView(
                     children: [
-                      Text('gay'),
                       for (var item in testData!)
                         ScheduleCard(
                           scheduleEvent: item,
@@ -138,7 +142,34 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
             ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Add to calendar",
-        onPressed: () {},
+        onPressed: () async {
+          final url = Uri.parse(
+            'http://localhost:8080/api/generateCalendarEvents',
+          );
+          final today = DateTime.now();
+          String todaysDateString = '${today.day}-${today.month}-${today.year}';
+
+          final calendarEvents = await http.post(url, body: initialJson);
+          final bytes = calendarEvents.bodyBytes.toJS;
+
+          final fileBlob = web.Blob(
+            [bytes].toJS,
+            web.BlobPropertyBag(type: 'text/calendar;charset=utf-8'),
+          );
+
+          final objectUrl = web.URL.createObjectURL(fileBlob);
+
+          final anchor = web.HTMLAnchorElement()
+            ..href = objectUrl
+            ..download = '$todaysDateString-bins.ics'
+            ..style.display = 'none';
+
+          web.document.body!.append(anchor);
+          anchor.click();
+          anchor.remove();
+
+          web.URL.revokeObjectURL(objectUrl);
+        },
         child: Icon(Icons.calendar_month),
       ),
     );
