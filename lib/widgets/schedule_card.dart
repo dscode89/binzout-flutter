@@ -33,7 +33,9 @@ class _ScheduleCardState extends State<ScheduleCard> {
   @override
   Widget build(BuildContext context) {
     final parsedDate = DateTime.parse(widget.scheduleEvent.date);
-    final formattedDate = DateFormat().add_E().add_yMd().format(parsedDate);
+    final formattedDate = DateFormat().add_E().add_d().add_MMM().add_y().format(
+      parsedDate,
+    );
 
     final scheduledDateInMilliseconds = parsedDate.millisecondsSinceEpoch;
     final currentDateInMilliSeconds = DateTime.now().millisecondsSinceEpoch;

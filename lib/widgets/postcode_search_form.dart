@@ -90,9 +90,11 @@ class _PostcodeSearchForm extends State<PostcodeSearchForm> {
                 final isValid = _inputFormStateKey.currentState!.validate();
                 if (!isValid) return;
 
-                Navigator.of(
-                  context,
-                ).push(slideUpAnimation(BinSchedulePage(postcode: "L167PQ")));
+                Navigator.of(context).push(
+                  slideUpAnimation(
+                    BinSchedulePage(postcode: _postcodeInputController.text),
+                  ),
+                );
 
                 _postcodeInputController.clear();
               },

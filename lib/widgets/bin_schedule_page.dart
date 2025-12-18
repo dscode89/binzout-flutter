@@ -3,7 +3,6 @@ import 'package:binzout/classes/bin_schedule_event.dart';
 import 'package:binzout/utilities/type_assert_json_list.dart';
 import 'package:binzout/widgets/schedule_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:web/web.dart' as web;
 
@@ -16,7 +15,7 @@ class BinSchedulePage extends StatefulWidget {
 }
 
 class _BinSchedulePageState extends State<BinSchedulePage> {
-  late final List<BinScheduleEvent>? testData;
+  late final List<BinScheduleEvent>? data;
   String initialJson = "";
 
   bool isLoading = true;
@@ -24,32 +23,29 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
   @override
   void initState() {
     super.initState();
-    _loadTestJson();
+    _fetchRequestedData();
   }
 
-  Future<void> _loadTestJson() async {
-    final testJson = await rootBundle.loadString('assets/testData.json');
+  Future<void> _fetchRequestedData() async {
+    final url = Uri.parse(
+      "http://localhost:8080/api/bins/postcode/${widget.postcode}",
+    );
+    final response = await http.get(url);
+    ('${response.body} gay boy');
     final convertedBinScheduleData = typeAssertJsonList(
-      testJson,
+      response.body,
       BinScheduleEvent.fromJson,
     );
 
     setState(() {
-      initialJson = testJson;
-      testData = convertedBinScheduleData;
-    });
-
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        isLoading = false;
-      });
+      data = convertedBinScheduleData;
+      isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     double currentScreenWidth = MediaQuery.of(context).size.width.toDouble();
-    print(currentScreenWidth);
 
     if (isLoading) {
       return Scaffold(
@@ -102,7 +98,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
                         padding: const EdgeInsets.all(8.0),
                         child: ListView(
                           children: [
-                            for (var item in testData!)
+                            for (var item in data!)
                               ScheduleCard(
                                 scheduleEvent: item,
                                 orientation: 'vertical',
@@ -132,7 +128,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        for (var item in testData!)
+                        for (var item in data!)
                           ScheduleCard(
                             scheduleEvent: item,
                             orientation: 'vertical',

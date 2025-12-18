@@ -29,7 +29,7 @@ class VerticalScheduleCard extends StatelessWidget {
       _ => 'Unknown Waste',
     };
 
-    return Container(
+    return SizedBox(
       width: 350,
       child: Card(
         child: Column(
@@ -101,10 +101,12 @@ class VerticalScheduleCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Collection Date: ',
+                      'Collection Date: $formattedDate',
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
-                    Text('Message: '),
+                    Text(
+                      'Message: ${daysTillDueDate + 1} days till your bin collection.',
+                    ),
                   ],
                 ),
               ),
