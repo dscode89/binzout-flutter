@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:js_interop';
-import 'dart:typed_data';
 import 'package:binzout/classes/bin_schedule_event.dart';
 import 'package:binzout/utilities/type_assert_json_list.dart';
 import 'package:binzout/widgets/schedule_card.dart';
@@ -51,9 +49,27 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
   @override
   Widget build(BuildContext context) {
     double currentScreenWidth = MediaQuery.of(context).size.width.toDouble();
+    print(currentScreenWidth);
 
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Fetching your bin schedule...',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 20),
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      );
     }
 
     return Scaffold(
@@ -66,46 +82,55 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
         centerTitle: false,
         iconTheme: IconThemeData(color: Theme.of(context).secondaryHeaderColor),
       ),
-      body: currentScreenWidth > 1244.0
-          ? Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 1300, maxHeight: 600),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: BoxBorder.all(color: Colors.white),
-                  ),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      for (var item in testData!)
-                        ScheduleCard(
-                          scheduleEvent: item,
-                          orientation: 'vertical',
+      body: currentScreenWidth < 1340
+          ? SizedBox(
+              width: double.infinity,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 400),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: BoxBorder.all(
+                          color: Theme.of(context).primaryColor,
+                          width: 3,
                         ),
-                    ],
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView(
+                          children: [
+                            for (var item in testData!)
+                              ScheduleCard(
+                                scheduleEvent: item,
+                                orientation: 'vertical',
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
             )
-          : currentScreenWidth < 702
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.8,
-                  ),
-
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: BoxBorder.all(
-                        color: Theme.of(context).primaryColor,
-                        width: 3,
-                      ),
-                      borderRadius: BorderRadius.circular(6),
+          : Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 1300, maxHeight: 410),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: BoxBorder.all(
+                      color: Theme.of(context).primaryColor,
+                      width: 3,
                     ),
-                    child: ListView(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         for (var item in testData!)
                           ScheduleCard(
@@ -114,28 +139,6 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
                           ),
                       ],
                     ),
-                  ),
-                ),
-              ),
-            )
-          : Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.7,
-                ),
-
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: BoxBorder.all(color: Colors.white),
-                  ),
-                  child: ListView(
-                    children: [
-                      for (var item in testData!)
-                        ScheduleCard(
-                          scheduleEvent: item,
-                          orientation: 'horizontal',
-                        ),
-                    ],
                   ),
                 ),
               ),

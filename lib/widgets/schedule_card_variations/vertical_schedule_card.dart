@@ -15,35 +15,100 @@ class VerticalScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        width: 300,
-        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+    String titleText = switch (widget.scheduleEvent.type + 3) {
+      4 => 'Purple Bin',
+      5 => 'Blue Bin',
+      6 => 'Green Bin',
+      _ => 'Unknown Bin',
+    };
+
+    String subTitleText = switch (widget.scheduleEvent.type + 3) {
+      4 => 'This bin is for general waste.',
+      5 => 'This bin is for recycling. ',
+      6 => 'This bin is for your green waste. ',
+      _ => 'Unknown Waste',
+    };
+
+    return Container(
+      width: 350,
+      child: Card(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.restore_from_trash,
-              color: widget!.binColorReference[widget.scheduleEvent.type],
-              size: 200,
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white54,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      titleText,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w700,
+                        color: widget
+                            .binColorReference[widget.scheduleEvent.type + 3],
+                      ),
+                    ),
+                    Text(
+                      subTitleText,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: widget
+                            .binColorReference[widget.scheduleEvent.type + 6],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Text(
-              'Next Collection Date:',
-              style: TextStyle(fontSize: 20, color: Colors.white),
+
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: widget.binColorReference[widget.scheduleEvent.type],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(48.0),
+                child: Icon(
+                  Icons.restore_from_trash,
+                  size: 150,
+                  color:
+                      widget.binColorReference[widget.scheduleEvent.type + 3],
+                ),
+              ),
             ),
-            Text(
-              formattedDate,
-              style: TextStyle(fontSize: 19, color: Colors.pink),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Collection Date: ',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text('Message: '),
+                  ],
+                ),
+              ),
             ),
-            SizedBox(height: 40),
-            Text(
-              daysTillDueDate == 0
-                  ? 'Put your bin out tonight!'
-                  : '$daysTillDueDate days till bin collection.',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            SizedBox(height: 20),
           ],
         ),
       ),

@@ -7,10 +7,16 @@ import 'package:intl/intl.dart';
 class ScheduleCard extends StatefulWidget {
   final BinScheduleEvent scheduleEvent;
   final String orientation;
-  final Map<int, MaterialColor> binColorReference = const {
-    1: Colors.deepPurple,
-    2: Colors.blue,
-    3: Colors.green,
+  final Map<int, Color> binColorReference = const {
+    1: Color(0xffB19CD9),
+    2: Color(0xffAEC6CF),
+    3: Color(0xffADD0B3),
+    4: Color(0xff9F8CC3),
+    5: Color(0xff9CB2BA),
+    6: Color(0xff9BBBA1),
+    7: Color(0xff8D7CAD),
+    8: Color(0xff8B9EA5),
+    9: Color(0xff8AA68F),
   };
 
   const ScheduleCard({
@@ -36,16 +42,10 @@ class _ScheduleCardState extends State<ScheduleCard> {
       milliseconds: (scheduledDateInMilliseconds - currentDateInMilliSeconds),
     ).inDays;
 
-    return widget.orientation == "vertical"
-        ? VerticalScheduleCard(
-            widget: widget,
-            daysTillDueDate: daysTillDueDate,
-            formattedDate: formattedDate,
-          )
-        : HorizontalScheduleCard(
-            widget: widget,
-            daysTillDueDate: daysTillDueDate,
-            formattedDate: formattedDate,
-          );
+    return VerticalScheduleCard(
+      widget: widget,
+      daysTillDueDate: daysTillDueDate,
+      formattedDate: formattedDate,
+    );
   }
 }
