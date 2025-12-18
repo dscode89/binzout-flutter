@@ -15,9 +15,8 @@ class BinSchedulePage extends StatefulWidget {
 }
 
 class _BinSchedulePageState extends State<BinSchedulePage> {
-  late final List<BinScheduleEvent>? data;
+  late final List<BinScheduleEvent>? parsedData;
   String initialJson = "";
-
   bool isLoading = true;
 
   @override
@@ -31,14 +30,15 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
       "http://localhost:8080/api/bins/postcode/${widget.postcode}",
     );
     final response = await http.get(url);
-    ('${response.body} gay boy');
+
     final convertedBinScheduleData = typeAssertJsonList(
       response.body,
       BinScheduleEvent.fromJson,
     );
 
     setState(() {
-      data = convertedBinScheduleData;
+      parsedData = convertedBinScheduleData;
+      initialJson = response.body;
       isLoading = false;
     });
   }
@@ -98,7 +98,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
                         padding: const EdgeInsets.all(8.0),
                         child: ListView(
                           children: [
-                            for (var item in data!)
+                            for (var item in parsedData!)
                               ScheduleCard(
                                 scheduleEvent: item,
                                 orientation: 'vertical',
@@ -128,7 +128,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        for (var item in data!)
+                        for (var item in parsedData!)
                           ScheduleCard(
                             scheduleEvent: item,
                             orientation: 'vertical',
@@ -149,10 +149,13 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
           String todaysDateString = '${today.day}-${today.month}-${today.year}';
 
           final calendarEvents = await http.post(url, body: initialJson);
-          final bytes = calendarEvents.bodyBytes.toJS;
+          final jsBytes = calendarEvents.bodyBytes;
+
+          final parts = JSArray() as JSArray<web.BlobPart>;
+          parts.add(jsBytes.toJS);
 
           final fileBlob = web.Blob(
-            [bytes].toJS,
+            parts,
             web.BlobPropertyBag(type: 'text/calendar;charset=utf-8'),
           );
 

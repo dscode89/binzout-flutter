@@ -27,7 +27,7 @@ class _AppInformationState extends State<AppInformationSection> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +48,7 @@ class _AppInformationState extends State<AppInformationSection> {
                   TextSpan(text: "I created this application for "),
                   TextSpan(
                     text:
-                        "two reasons. Myself, my flatmates and my friends all had the same initial problem -",
+                        "two reasons: Myself, my flatmates and my friends all had the same initial problem that",
                   ),
                   TextSpan(
                     text:
@@ -72,7 +72,7 @@ class _AppInformationState extends State<AppInformationSection> {
                         "The second reason is that I wanted to practice another language - in this case, ",
                   ),
                   TextSpan(
-                    text: "Dart.",
+                    text: "Dart/Flutter.",
                     style: TextStyle(
                       decoration: isHoveringOverDartLink
                           ? TextDecoration.underline
@@ -128,9 +128,19 @@ class _AppInformationState extends State<AppInformationSection> {
                     ),
                     text: "green ",
                   ),
+                  TextSpan(text: "bins will be generated for you."),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            RichText(
+              textAlign: TextAlign.start,
+              text: TextSpan(
+                style: TextStyle(fontSize: 14, color: Colors.black87),
+                children: <TextSpan>[
                   TextSpan(
                     text:
-                        "bins will be generated for you. Currently this is only for residents of Liverpool, UK.",
+                        "A calendar file will be downloaded and upon opening this, you will be prompted to add this your calendar.",
                   ),
                 ],
               ),
