@@ -1,6 +1,4 @@
 import 'package:binzout/utilities/set_current_postcode.dart';
-import 'package:binzout/widgets/bin_schedule_page.dart';
-// import 'package:binzout/widgets/bin_schedule_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 

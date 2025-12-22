@@ -1,7 +1,5 @@
 import 'dart:js_interop';
 import 'package:binzout/classes/bin_schedule_event.dart';
-import 'package:binzout/main.dart';
-import 'package:binzout/utilities/clear_stored_data.dart';
 import 'package:binzout/utilities/get_current_postcode.dart';
 import 'package:binzout/utilities/type_assert_json_list.dart';
 import 'package:binzout/widgets/schedule_card.dart';
@@ -33,7 +31,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
     try {
       final providedPostcode = await getCurrentPostcode();
       final url = Uri.parse(
-        "http://localhost:8080/api/bins/postcode/$providedPostcode",
+        "https://binzout-server.onrender.com/api/bins/postcode/$providedPostcode",
       );
 
       final response = await http.get(url);
@@ -260,7 +258,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
 
             web.URL.revokeObjectURL(objectUrl);
           } catch (e) {
-            print('${e}daddy');
+            print('${e}');
           }
         },
         child: Icon(Icons.calendar_month),
