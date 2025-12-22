@@ -1,5 +1,7 @@
-import 'package:binzout/animations/slide_up.dart';
+import 'package:binzout/utilities/set_current_postcode.dart';
 import 'package:binzout/widgets/bin_schedule_page.dart';
+// import 'package:binzout/widgets/bin_schedule_page.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
 class PostcodeSearchForm extends StatefulWidget {
@@ -63,10 +65,18 @@ class _PostcodeSearchForm extends State<PostcodeSearchForm> {
                 }
               },
               validator: (value) {
+                var regExp = RegExp(r'[^A-Z0-9]');
                 if (value == null || value.isEmpty) {
                   return 'Postcode required.';
+                } else if (regExp.hasMatch(value)) {
+                  return 'No spaces or special characters.';
+                } else if (value.length < 5) {
+                  return 'Postcode is not long enough.';
+                } else if (value.length > 7) {
+                  return 'Postcode is too long.';
+                } else {
+                  return null;
                 }
-                return null;
               },
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
@@ -86,14 +96,15 @@ class _PostcodeSearchForm extends State<PostcodeSearchForm> {
             SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final isValid = _inputFormStateKey.currentState!.validate();
                 if (!isValid) return;
 
-                Navigator.of(context).push(
-                  slideUpAnimation(
-                    BinSchedulePage(postcode: _postcodeInputController.text),
-                  ),
+                context.pushReplacement("/results");
+
+                await setPreferenceValue(
+                  "postcode",
+                  _postcodeInputController.text,
                 );
 
                 _postcodeInputController.clear();

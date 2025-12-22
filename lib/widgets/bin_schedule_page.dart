@@ -1,14 +1,17 @@
 import 'dart:js_interop';
 import 'package:binzout/classes/bin_schedule_event.dart';
+import 'package:binzout/main.dart';
+import 'package:binzout/utilities/clear_stored_data.dart';
+import 'package:binzout/utilities/get_current_postcode.dart';
 import 'package:binzout/utilities/type_assert_json_list.dart';
 import 'package:binzout/widgets/schedule_card.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:web/web.dart' as web;
 
 class BinSchedulePage extends StatefulWidget {
-  final String postcode;
-  const BinSchedulePage({super.key, required this.postcode});
+  const BinSchedulePage({super.key});
 
   @override
   State<BinSchedulePage> createState() => _BinSchedulePageState();
@@ -18,6 +21,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
   late final List<BinScheduleEvent>? parsedData;
   String initialJson = "";
   bool isLoading = true;
+  bool showErrorPage = false;
 
   @override
   void initState() {
@@ -26,21 +30,36 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
   }
 
   Future<void> _fetchRequestedData() async {
-    final url = Uri.parse(
-      "http://localhost:8080/api/bins/postcode/${widget.postcode}",
-    );
-    final response = await http.get(url);
+    try {
+      final providedPostcode = await getCurrentPostcode();
+      final url = Uri.parse(
+        "http://localhost:8080/api/bins/postcode/$providedPostcode",
+      );
 
-    final convertedBinScheduleData = typeAssertJsonList(
-      response.body,
-      BinScheduleEvent.fromJson,
-    );
+      final response = await http.get(url);
 
-    setState(() {
-      parsedData = convertedBinScheduleData;
-      initialJson = response.body;
-      isLoading = false;
-    });
+      if (response.statusCode == 404) {
+        throw (response.body);
+      }
+
+      final convertedBinScheduleData = typeAssertJsonList(
+        response.body,
+        BinScheduleEvent.fromJson,
+      );
+
+      setState(() {
+        parsedData = convertedBinScheduleData;
+        initialJson = response.body;
+        isLoading = false;
+      });
+    } catch (e) {
+      Future.delayed(Duration(milliseconds: 500), () {
+        setState(() {
+          isLoading = false;
+          showErrorPage = true;
+        });
+      });
+    }
   }
 
   @override
@@ -68,12 +87,79 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
       );
     }
 
+    if (showErrorPage) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, color: Colors.white, size: 140),
+              SizedBox(height: 20),
+              RichText(
+                text: TextSpan(
+                  text: 'We could not find your data.',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              RichText(
+                text: TextSpan(
+                  text: 'Please check your provided postcode.',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+              Icon(Icons.error),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.circular(3),
+                    ),
+                  ),
+                  backgroundColor: WidgetStateProperty<Color>.fromMap(<
+                    WidgetStatesConstraint,
+                    Color
+                  >{
+                    WidgetState.hovered: const Color.fromARGB(255, 62, 36, 107),
+                    WidgetState.any: Theme.of(context).primaryColor,
+                  }),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Back To Form',
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          'Upcoming collection dates:',
-          style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
+        toolbarHeight: 80,
+        title: IconButton(
+          onPressed: () {
+            context.go("/");
+          },
+          icon: Image.asset('assets/binzout.png', width: 250),
         ),
         centerTitle: false,
         iconTheme: IconThemeData(color: Theme.of(context).secondaryHeaderColor),
@@ -142,35 +228,40 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
       floatingActionButton: FloatingActionButton(
         tooltip: "Add to calendar",
         onPressed: () async {
-          final url = Uri.parse(
-            'http://localhost:8080/api/generateCalendarEvents',
-          );
-          final today = DateTime.now();
-          String todaysDateString = '${today.day}-${today.month}-${today.year}';
+          try {
+            final url = Uri.parse(
+              'http://localhost:8080/api/generateCalendarEvents',
+            );
+            final today = DateTime.now();
+            String todaysDateString =
+                '${today.day}-${today.month}-${today.year}';
 
-          final calendarEvents = await http.post(url, body: initialJson);
-          final jsBytes = calendarEvents.bodyBytes;
+            final calendarEvents = await http.post(url, body: initialJson);
+            final jsBytes = calendarEvents.bodyBytes;
 
-          final parts = JSArray() as JSArray<web.BlobPart>;
-          parts.add(jsBytes.toJS);
+            final parts = JSArray() as JSArray<web.BlobPart>;
+            parts.add(jsBytes.toJS);
 
-          final fileBlob = web.Blob(
-            parts,
-            web.BlobPropertyBag(type: 'text/calendar;charset=utf-8'),
-          );
+            final fileBlob = web.Blob(
+              parts,
+              web.BlobPropertyBag(type: 'text/calendar;charset=utf-8'),
+            );
 
-          final objectUrl = web.URL.createObjectURL(fileBlob);
+            final objectUrl = web.URL.createObjectURL(fileBlob);
 
-          final anchor = web.HTMLAnchorElement()
-            ..href = objectUrl
-            ..download = '$todaysDateString-bins.ics'
-            ..style.display = 'none';
+            final anchor = web.HTMLAnchorElement()
+              ..href = objectUrl
+              ..download = '$todaysDateString-bins.ics'
+              ..style.display = 'none';
 
-          web.document.body!.append(anchor);
-          anchor.click();
-          anchor.remove();
+            web.document.body!.append(anchor);
+            anchor.click();
+            anchor.remove();
 
-          web.URL.revokeObjectURL(objectUrl);
+            web.URL.revokeObjectURL(objectUrl);
+          } catch (e) {
+            print('${e}daddy');
+          }
         },
         child: Icon(Icons.calendar_month),
       ),
