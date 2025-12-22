@@ -140,7 +140,7 @@ class _AppInformationState extends State<AppInformationSection> {
                 children: <TextSpan>[
                   TextSpan(
                     text:
-                        "A calendar file will be downloaded and upon opening this, you will be prompted to add this your calendar.",
+                        "A calendar file will be downloaded and upon opening this, you will be prompted to add this your calendar. This is currently only available for residents of Liverpool, UK.",
                   ),
                 ],
               ),
