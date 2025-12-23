@@ -228,7 +228,7 @@ class _BinSchedulePageState extends State<BinSchedulePage> {
         onPressed: () async {
           try {
             final url = Uri.parse(
-              'http://localhost:8080/api/generateCalendarEvents',
+              'https://binzout-server.onrender.com/api/generateCalendarEvents',
             );
             final today = DateTime.now();
             String todaysDateString =
