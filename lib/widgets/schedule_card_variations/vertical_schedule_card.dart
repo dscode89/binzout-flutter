@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:binzout/widgets/schedule_card.dart';
@@ -75,37 +74,20 @@ class VerticalScheduleCard extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: (Text.rich(
                                     TextSpan(
-                                      text: '',
-                                      children: [
-                                        TextSpan(
-                                          text:
-                                              'How to pay for Green Bin collection.',
-                                          style: const TextStyle(
-                                            color: Colors.blue,
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () async {
-                                              try {
-                                                print("tapping tooltip");
-                                                final uri = Uri.parse(
-                                                  'https://liverpool.gov.uk/bins-and-recycling/green-bins/pay-for-a-green-waste-collection/',
-                                                );
-                                                final outcome =
-                                                    await canLaunchUrl(uri);
-                                              } catch (e) {
-                                                print(e);
-                                              }
-
-                                              // await launchUrl(
-                                              //   uri,
-                                              //   mode: LaunchMode
-                                              //       .externalApplication,
-                                              // );
-                                            },
-                                        ),
-                                      ],
+                                      text: Uri.parse(
+                                        'https://liverpool.gov.uk/bins-and-recycling/green-bins/pay-for-a-green-waste-collection/',
+                                      ).toString(),
+                                      mouseCursor: SystemMouseCursors.click,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          await launchUrl(
+                                            Uri.parse(
+                                              'https://liverpool.gov.uk/bins-and-recycling/green-bins/pay-for-a-green-waste-collection/',
+                                            ),
+                                            mode:
+                                                LaunchMode.externalApplication,
+                                          );
+                                        },
                                     ),
                                   )),
                                 ),
