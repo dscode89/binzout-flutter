@@ -88,9 +88,12 @@ class VerticalScheduleCard extends StatelessWidget {
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () async {
                                               print("tapping tooltip");
-                                              // final uri = Uri.parse(
-                                              //   'https://liverpool.gov.uk/bins-and-recycling/green-bins/pay-for-a-green-waste-collection/',
-                                              // );
+                                              final uri = Uri.parse(
+                                                'https://liverpool.gov.uk/bins-and-recycling/green-bins/pay-for-a-green-waste-collection/',
+                                              );
+                                              if (await canLaunchUrl(uri)) {
+                                                print("Url can be launched");
+                                              }
 
                                               // await launchUrl(
                                               //   uri,
