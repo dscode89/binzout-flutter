@@ -93,6 +93,10 @@ class VerticalScheduleCard extends StatelessWidget {
                                               );
                                               if (await canLaunchUrl(uri)) {
                                                 print("Url can be launched");
+                                              } else {
+                                                print(
+                                                  "Url can not be launched",
+                                                );
                                               }
 
                                               // await launchUrl(
