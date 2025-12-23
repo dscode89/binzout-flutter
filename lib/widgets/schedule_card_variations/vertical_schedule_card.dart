@@ -91,14 +91,10 @@ class VerticalScheduleCard extends StatelessWidget {
                                               final uri = Uri.parse(
                                                 'https://liverpool.gov.uk/bins-and-recycling/green-bins/pay-for-a-green-waste-collection/',
                                               );
-                                              if (await canLaunchUrl(uri)) {
-                                                print("Url can be launched");
-                                              } else {
-                                                print(
-                                                  "Url can not be launched",
-                                                );
-                                              }
+                                              final outcome =
+                                                  await canLaunchUrl(uri);
 
+                                              print(outcome);
                                               // await launchUrl(
                                               //   uri,
                                               //   mode: LaunchMode
