@@ -71,6 +71,18 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Image.asset('assets/binzout.png', width: 250),
         toolbarHeight: 80,
         centerTitle: false,
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: isEndDrawerOpen
+                  ? Icon(Icons.close)
+                  : Icon(Icons.question_mark_outlined), // Your custom icon
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+        ],
         iconTheme: IconThemeData(color: Theme.of(context).secondaryHeaderColor),
       ),
       endDrawer: AppInformationSection(
