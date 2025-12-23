@@ -74,7 +74,12 @@ class VerticalScheduleCard extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: (Text.rich(
                                     TextSpan(
-                                      text: 'Find out how to pay for your Green bin collection',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      text:
+                                          'Find out how to pay for your Green bin collection',
                                       mouseCursor: SystemMouseCursors.click,
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () async {
