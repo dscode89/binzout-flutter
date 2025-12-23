@@ -39,6 +39,8 @@ dependencies:
   web: ^1.1.1
   shared_preferences: ^2.5.4
   go_router: ^17.0.1
+  just_the_tooltip: ^0.0.12
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

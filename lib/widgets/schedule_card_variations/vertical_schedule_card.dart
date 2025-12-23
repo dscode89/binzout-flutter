@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:binzout/widgets/schedule_card.dart';
+import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:flutter/material.dart';
 
 class VerticalScheduleCard extends StatelessWidget {
@@ -49,15 +53,72 @@ class VerticalScheduleCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      titleText,
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w700,
-                        color: widget
-                            .binColorReference[widget.scheduleEvent.type + 3],
-                      ),
-                    ),
+                    titleText == "Green Bin"
+                        ? Row(
+                            children: [
+                              Text(
+                                '$titleText ',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w700,
+                                  color:
+                                      widget.binColorReference[widget
+                                              .scheduleEvent
+                                              .type +
+                                          3],
+                                ),
+                              ),
+                              JustTheTooltip(
+                                showDuration: Duration(milliseconds: 4000),
+
+                                content: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: (Text.rich(
+                                    TextSpan(
+                                      text: '',
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              'How to pay for Green Bin collection.',
+                                          style: const TextStyle(
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () async {
+                                              final uri = Uri.parse(
+                                                'https://liverpool.gov.uk/bins-and-recycling/green-bins/pay-for-a-green-waste-collection/',
+                                              );
+                                              if (await canLaunchUrl(uri)) {
+                                                await launchUrl(
+                                                  uri,
+                                                  mode: LaunchMode
+                                                      .externalApplication,
+                                                );
+                                              }
+                                            },
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                                ),
+                                child: Icon(Icons.info_outlined),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            titleText,
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w700,
+                              color:
+                                  widget.binColorReference[widget
+                                          .scheduleEvent
+                                          .type +
+                                      3],
+                            ),
+                          ),
                     Text(
                       subTitleText,
                       style: TextStyle(

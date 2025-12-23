@@ -40966,7 +40966,7 @@ A.agI.prototype={
 $0(){var s=0,r=A.O(t.H),q=1,p=[],o=this,n,m,l,k,j,i,h,g,f,e,d,c,b,a
 var $async$$0=A.P(function(a0,a1){if(a0===1){p.push(a1)
 s=q}for(;;)switch(s){case 0:q=3
-n=A.d7("http://localhost:8080/api/generateCalendarEvents")
+n=A.d7("https://binzout-server.onrender.com/api/generateCalendarEvents")
 m=new A.eC(Date.now(),0,!1)
 l=""+A.KY(m)+"-"+A.hF(m)+"-"+A.KZ(m)
 s=6
